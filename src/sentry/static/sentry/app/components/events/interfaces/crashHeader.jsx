@@ -92,14 +92,8 @@ class CrashHeader extends React.Component {
   render() {
     const {title, beforeTitle, hideGuide, stackView, stackType, newestFirst} = this.props;
 
-    let titleNode = (
-      <h3
-        style={{
-          marginBottom: 0,
-          maxWidth: '100%',
-          whiteSpace: 'nowrap',
-        }}
-      >
+    const titleNode = (
+      <React.Fragment>
         {title}
         <small>
           (
@@ -110,22 +104,28 @@ class CrashHeader extends React.Component {
           </Tooltip>
           )
         </small>
-      </h3>
+      </React.Fragment>
     );
-
-    if (!hideGuide) {
-      titleNode = (
-        <GuideAnchor target="exception" position="top">
-          {titleNode}
-        </GuideAnchor>
-      );
-    }
 
     return (
       <Wrapper className="crash-title">
         <TitleInfo>
           {beforeTitle}
-          {titleNode}
+          <h3
+            style={{
+              marginBottom: 0,
+              maxWidth: '100%',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {hideGuide ? (
+              titleNode
+            ) : (
+              <GuideAnchor target="exception" position="bottom">
+                {titleNode}
+              </GuideAnchor>
+            )}
+          </h3>
         </TitleInfo>
         <ButtonGroupWrapper>
           <ButtonGroup merged>
