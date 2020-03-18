@@ -10,7 +10,7 @@ import accountPreferencesFields from 'app/data/forms/accountPreferences';
 import {APIRequestMethod} from 'app/api';
 import {updateUser} from 'app/actionCreators/account';
 import {t} from 'app/locale';
-import {User, Avatar} from 'app/types';
+import {User} from 'app/types';
 
 const ENDPOINT = '/users/me/';
 
@@ -24,6 +24,19 @@ class AccountDetails extends AsyncView {
     // the updateUser method updates our Config Store
     // No components listen to the ConfigStore, they just access it directly
     updateUser(user);
+  };
+
+  handleSaveAvatar = (user: User) => {
+    // We need to update the state, because AvatarChooser is using it,
+    // otherwise it will flick
+    this.setState(
+      {
+        user,
+      },
+      () => {
+        this.handleSubmitSuccess(user as User);
+      }
+    );
   };
 
   renderBody() {
@@ -57,8 +70,8 @@ class AccountDetails extends AsyncView {
         <AvatarChooser
           endpoint="/users/me/avatar/"
           model={user}
-          onSave={avatar => {
-            this.handleSubmitSuccess({...user, ...avatar});
+          onSave={resp => {
+            this.handleSaveAvatar(resp as User);
           }}
           isUser
         />
